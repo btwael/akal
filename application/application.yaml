@@ -1,0 +1,4 @@
+name: TheDemo
+target: rpi3-64
+require:
+  - uart
