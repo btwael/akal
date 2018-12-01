@@ -10,6 +10,11 @@ SECTIONS {
     .rodata : {
         *(.rodata .rodata.* .gnu.linkonce.r*)
     }
+    __init_start = .;
+    .init_array : {
+        *(.init_array*)
+    }
+    __init_end = .;
     .data : {
         *(.data .data.* .gnu.linkonce.d*)
     }
@@ -20,4 +25,16 @@ SECTIONS {
         *(COMMON)
         __bss_end__ = .;
     }
+    .stack_core0 : {
+        . = ALIGN(16);
+        __stack_cores0_start__ = .;
+        . = . + 512;
+        __stack_cores0_el0__ = .;
+        . = . + 32768;
+        __stack_cores0_el1__ = .;
+        . = . + 16384;
+        __stack_cores0_el2__ = .;
+        . = ALIGN(16);
+        __stack_cores0_end__ = .;  
+    } > RAM
 }
