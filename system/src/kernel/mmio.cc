@@ -1,3 +1,6 @@
+#include "akal/kernel/mmio.hh"
+#include "akal/core/types.hh"
+
 inline void write8(Size address, u8 value) {
   *((volatile u8 *) address) = value;
 }
