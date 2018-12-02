@@ -21,6 +21,20 @@ namespace akal {
 
         void write(const char *str);
     };
+
+    //*-- Uart0Device
+    class Uart0Device: public Device {
+    public:
+        Uart0Device();
+
+        ~Uart0Device();
+
+        void init();
+
+        void write(i32 c);
+
+        void write(const char *str);
+    };
 }
 
 
