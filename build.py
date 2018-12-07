@@ -3,7 +3,7 @@ from poyo import parse_string, PoyoException
 
 
 def compileCpp(input, output, define_list):
-    l = "aarch64-elf-g++ -Isystem -Isystem/include -march=armv8-a -mtune=cortex-a53 -mlittle-endian -mcmodel=small -Wall -fno-builtin -nostdinc -nostdlib -fno-exceptions -fno-rtti -std=c++11 -c "
+    l = "aarch64-elf-g++ -Isystem -Isystem/include -O2 -march=armv8-a -mtune=cortex-a53 -mlittle-endian -mcmodel=small -Wall -Wno-strict-aliasing -fno-builtin -nostdinc -nostdlib -fno-exceptions -fno-rtti -std=c++11 -c "
     l = l + input + " -o " + output
     for define in define_list:
         l += " -D" + define
