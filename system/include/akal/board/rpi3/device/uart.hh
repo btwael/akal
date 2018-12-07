@@ -9,7 +9,7 @@ namespace akal {
 
     //*-- Uart1Device
     // this is a driver for mini UART
-    class Uart1Device: public Device {
+    class Uart1Device: public UartDevice {
     public:
         Uart1Device();
 
@@ -23,7 +23,7 @@ namespace akal {
     };
 
     //*-- Uart0Device
-    class Uart0Device: public Device {
+    class Uart0Device: public UartDevice {
     public:
         Uart0Device();
 
