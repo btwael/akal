@@ -10,11 +10,11 @@ SECTIONS {
     .rodata : {
         *(.rodata .rodata.* .gnu.linkonce.r*)
     }
-    __init_start = .;
     .init_array : {
+        __init_start__ = .;
         *(.init_array*)
+        __init_end__ = .;
     }
-    __init_end = .;
     .data : {
         *(.data .data.* .gnu.linkonce.d*)
     }
