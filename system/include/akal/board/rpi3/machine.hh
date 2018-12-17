@@ -4,20 +4,23 @@
 // akal/kernel
 #include "akal/kernel/machine.hh"
 #include "akal/kernel/mmio.hh"
-// akal/board
+#include "akal/kernel/timer.hh"
+// akal/board/rpi3
+#include "akal/board/rpi3/timer.hh"
 #include "akal/board/rpi3/device/uart.hh"
 
-#define MMIO_BASE       (0x3f000000)
-
 namespace akal {
+    namespace rpi3 {
 
-    //*-- RaspberryPi3
-    class RaspberryPi3: public Machine {
-    public:
-        Uart1Device uart1;
-        Uart0Device uart0;
-    };
+        //*-- RaspberryPi3
+        class RaspberryPi3: public Machine {
+        public:
+            Uart1Device uart1;
+            Uart0Device uart0;
+            ARMTimer timer;
+        };
 
+    }
 }
 
 

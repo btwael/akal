@@ -1,8 +1,9 @@
 #ifdef AKAL_APPLICATION_TARGET_RPI3
 #include "akal/board/rpi3/machine.hh"
 #include "src/board/rpi3/mailbox.cc"
+#include "src/board/rpi3/timer.cc"
 #include "src/board/rpi3/device/uart.cc"
-typedef akal::RaspberryPi3 Machine;
+typedef akal::rpi3::RaspberryPi3 Machine;
 #else
 #error "Unknow target platform!"
 #endif

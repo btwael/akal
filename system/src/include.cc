@@ -1,4 +1,6 @@
 #include "kernel/device.cc"
+#include "kernel/machine.cc"
 #include "kernel/mmio.cc"
 #include "kernel/new.cc"
 #include "kernel/sysinit.cc"
+#include "kernel/timer.cc"
