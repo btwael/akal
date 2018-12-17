@@ -6,35 +6,38 @@
 #include "akal/kernel/mmio.hh"
 
 namespace akal {
+    namespace rpi3 {
 
-    //*-- Uart1Device
-    // this is a driver for mini UART
-    class Uart1Device: public UartDevice {
-    public:
-        Uart1Device();
+        //*-- Uart1Device
+        // this is a driver for mini UART
+        class Uart1Device: public UartDevice {
+        public:
+            Uart1Device();
 
-        ~Uart1Device();
+            ~Uart1Device();
 
-        void init();
+            void init();
 
-        void write(i32 c);
+            void write(i32 c);
 
-        void write(const char *str);
-    };
+            void write(const char *str);
+        };
 
-    //*-- Uart0Device
-    class Uart0Device: public UartDevice {
-    public:
-        Uart0Device();
+        //*-- Uart0Device
+        class Uart0Device: public UartDevice {
+        public:
+            Uart0Device();
 
-        ~Uart0Device();
+            ~Uart0Device();
 
-        void init();
+            void init();
 
-        void write(i32 c);
+            void write(i32 c);
 
-        void write(const char *str);
-    };
+            void write(const char *str);
+        };
+
+    }
 }
 
 

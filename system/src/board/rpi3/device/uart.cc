@@ -1,4 +1,6 @@
 // akal/kernel
+#include "akal/core/types.hh"
+// akal/kernel
 #include "akal/kernel/mmio.hh"
 // akal/board
 #include "akal/board/rpi3/mailbox.hh"
@@ -46,111 +48,113 @@
 #define UART0_ICR       (MMIO_BASE + 0x00201044)
 
 namespace akal {
+    namespace rpi3 {
 
-    //*-- Uart1Device
-    Uart1Device::Uart1Device() {
-        // nothing go here        
-    }
-
-    Uart1Device::~Uart1Device() {
-        // nothing go here
-    }
-
-    void Uart1Device::init() {
-        u32 r;
-        write32(AUX_ENABLE, 0x1); // TODO: this may disable other stuff.
-        write32(AUX_MU_IER, 0x0);
-        write32(AUX_MU_CNTL, 0x0);
-        write32(AUX_MU_LCR, 0x3);
-        write32(AUX_MU_MCR, 0x0);
-        write32(AUX_MU_IER, 0x0);
-        write32(AUX_MU_IIR, 0xc6);
-        write32(AUX_MU_BAUD, 270);
-        r = read32(GPFSEL1);
-        r &= ~((7 << 12) | (7 << 15));
-        r |= (2 << 12) | (2 << 15);
-        write32(GPFSEL1, r);
-        write32(GPPUD, 0);
-        r = 150;
-        while(r--) {
-            asm volatile("nop");
+        //*-- Uart1Device
+        Uart1Device::Uart1Device() {
+            // nothing go here        
         }
-        write32(GPPUDCLK0, (1 << 14) | (1 << 15));
-        r = 150;
-        while(r--) {
-            asm volatile("nop");
+
+        Uart1Device::~Uart1Device() {
+            // nothing go here
         }
-        write32(GPPUDCLK0, 0x0);
-        write32(AUX_MU_CNTL, 0x3);
-    }
 
-    void Uart1Device::write(i32 c) {
-        do {
-            asm volatile("nop");
-        } while(!(read32(AUX_MU_LSR) & 0x20));
-        write32(AUX_MU_IO, c);
-    }
-
-    void Uart1Device::write(const char *str) {
-        while(*str) {
-            this->write(*str++);
+        void Uart1Device::init() {
+            u32 r;
+            write32(AUX_ENABLE, 0x1); // TODO: this may disable other stuff.
+            write32(AUX_MU_IER, 0x0);
+            write32(AUX_MU_CNTL, 0x0);
+            write32(AUX_MU_LCR, 0x3);
+            write32(AUX_MU_MCR, 0x0);
+            write32(AUX_MU_IER, 0x0);
+            write32(AUX_MU_IIR, 0xc6);
+            write32(AUX_MU_BAUD, 270);
+            r = read32(GPFSEL1);
+            r &= ~((7 << 12) | (7 << 15));
+            r |= (2 << 12) | (2 << 15);
+            write32(GPFSEL1, r);
+            write32(GPPUD, 0);
+            r = 150;
+            while(r--) {
+                asm volatile("nop");
+            }
+            write32(GPPUDCLK0, (1 << 14) | (1 << 15));
+            r = 150;
+            while(r--) {
+                asm volatile("nop");
+            }
+            write32(GPPUDCLK0, 0x0);
+            write32(AUX_MU_CNTL, 0x3);
         }
-    }
 
-    //*-- Uart0Device
-    Uart0Device::Uart0Device() {
-        // nothing go here        
-    }
-
-    Uart0Device::~Uart0Device() {
-        // nothing go here
-    }
-
-    void Uart0Device::init() {
-        unsigned int r;
-        write32(UART0_CR, 0);
-        rpi3::mbox[0] = 8*4;
-        rpi3::mbox[1] = MBOX_REQUEST;
-        rpi3::mbox[2] = MBOX_TAG_SETCLKRATE;
-        rpi3::mbox[3] = 12;
-        rpi3::mbox[4] = 8;
-        rpi3::mbox[5] = 2;
-        rpi3::mbox[6] = 4000000;     // 4Mhz
-        rpi3::mbox[7] = MBOX_TAG_LAST;
-        rpi3::mbox_call(MBOX_CH_PROP);
-        r = read32(GPFSEL1);
-        r &=~((7 << 12) | (7 << 15));
-        r |=(4 << 12) | (4 << 15);
-        write32(GPFSEL1, r);
-        write32(GPPUD, 0);
-        r = 150;
-        while(r--) {
-            asm volatile("nop");
+        void Uart1Device::write(i32 c) {
+            do {
+                asm volatile("nop");
+            } while(!(read32(AUX_MU_LSR) & 0x20));
+            write32(AUX_MU_IO, c);
         }
-        write32(GPPUDCLK0, (1 << 14) | (1 << 15));
-        r = 150;
-        while(r--) {
-            asm volatile("nop");
+
+        void Uart1Device::write(const char *str) {
+            while(*str) {
+                this->write(*str++);
+            }
         }
-        write32(GPPUDCLK0, 0x0);
-        write32(UART0_ICR, 0x7FF);
-        write32(UART0_IBRD, 2);
-        write32(UART0_FBRD, 0xB);
-        write32(UART0_LCRH, 0b11<<5);
-        write32(UART0_CR, 0x301);
-    }
 
-    void Uart0Device::write(i32 c) {
-        do{
-            asm volatile("nop");
-        } while(read32(UART0_FR) & 0x20);
-        write32(UART0_DR, c);
-    }
-
-    void Uart0Device::write(const char *str) {
-        while(*str) {
-            this->write(*str++);
+        //*-- Uart0Device
+        Uart0Device::Uart0Device() {
+            // nothing go here        
         }
-    }
 
+        Uart0Device::~Uart0Device() {
+            // nothing go here
+        }
+
+        void Uart0Device::init() {
+            u32 r;
+            write32(UART0_CR, 0);
+            rpi3::mbox[0] = 8*4;
+            rpi3::mbox[1] = MBOX_REQUEST;
+            rpi3::mbox[2] = MBOX_TAG_SETCLKRATE;
+            rpi3::mbox[3] = 12;
+            rpi3::mbox[4] = 8;
+            rpi3::mbox[5] = 2;
+            rpi3::mbox[6] = 4000000;     // 4Mhz
+            rpi3::mbox[7] = MBOX_TAG_LAST;
+            rpi3::mbox_call(MBOX_CH_PROP);
+            r = read32(GPFSEL1);
+            r &=~((7 << 12) | (7 << 15));
+            r |=(4 << 12) | (4 << 15);
+            write32(GPFSEL1, r);
+            write32(GPPUD, 0);
+            r = 150;
+            while(r--) {
+                asm volatile("nop");
+            }
+            write32(GPPUDCLK0, (1 << 14) | (1 << 15));
+            r = 150;
+            while(r--) {
+                asm volatile("nop");
+            }
+            write32(GPPUDCLK0, 0x0);
+            write32(UART0_ICR, 0x7FF);
+            write32(UART0_IBRD, 2);
+            write32(UART0_FBRD, 0xB);
+            write32(UART0_LCRH, 0b11<<5);
+            write32(UART0_CR, 0x301);
+        }
+
+        void Uart0Device::write(i32 c) {
+            do{
+                asm volatile("nop");
+            } while(read32(UART0_FR) & 0x20);
+            write32(UART0_DR, c);
+        }
+
+        void Uart0Device::write(const char *str) {
+            while(*str) {
+                this->write(*str++);
+            }
+        }
+
+    }
 }
