@@ -2,18 +2,25 @@
 
 .globl _start
 _start:
+    mrs     x1, mpidr_el1
+    and     x1, x1, #3
+    cbz     x1, 3f
+    // cpu id > 0, stop
+2:  wfe
+    b       2b
+3:
     bl coreStackInit
 
-    // switch EL1
+/*    // switch EL1
     mov     x0, #0x3c5
     msr     spsr_el2, x0
     adr     x0, 1f
     msr     elr_el2, x0
     eret
-1:
+1:*/
     bl      akal_main
 hang:
-    b       hang
+    b       2b
 
 coreStackInit:
     ldr     x2, =__stack_cores0_el2__

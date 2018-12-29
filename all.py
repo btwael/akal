@@ -31,6 +31,8 @@ compileCpp("./application/main.cc", "./build/main.o", pp_define)
 system(
     "clang -target aarch64-none-elf -Wall -ffreestanding -nostdinc -nostdlib -c ./system/src/board/rpi3/startup.S -o ./build/startup.o")
 system(
-    "aarch64-none-elf-ld -nostdlib -nostartfiles ./build/startup.o ./build/main.o -T ./system/src/board/rpi3/link.ld -o ./build/kernel8.elf")
+    "aarch64-none-elf-ld -r -b binary -o ./build/font.o system/resources/font.psf")
+system(
+    "aarch64-none-elf-ld -nostdlib -nostartfiles ./build/startup.o ./build/main.o ./build/font.o -T ./system/src/board/rpi3/link.ld -o ./build/kernel8.elf")
 system("aarch64-none-elf-objcopy -O binary ./build/kernel8.elf ./build/kernel8.img")
 system("qemu-system-aarch64 -M raspi3 -kernel ./build/kernel8.img -serial stdio")
