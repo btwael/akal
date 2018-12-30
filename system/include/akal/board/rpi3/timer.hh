@@ -13,7 +13,7 @@
 namespace akal {
     namespace rpi3 {
 
-        class ARMTimer: public Timer {
+        class ARMTimer {
         public:
             ARMTimer();
 
@@ -21,7 +21,7 @@ namespace akal {
 
             u64 getTimer();
 
-            void delay(u32 n, TimeUnit unit);
+            void delay(u32 n, TimeUnit unit = TimeUnit::microsecond);
         };
 
     }

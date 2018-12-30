@@ -21,7 +21,7 @@ namespace akal {
                 h = read32(SYSTMR_HI);
                 l = read32(SYSTMR_LO);
             }
-            return ((u64) h << 32) | l;
+            return ((unsigned long) h << 32) | l;
         }
 
         void ARMTimer::delay(u32 n, TimeUnit unit) {
@@ -44,16 +44,19 @@ namespace akal {
                     n = n * 1000000 * 60 * 60 * 24;
                     break;
             }
+            #ifndef AKAL_APPLICATION_TARGET_RPI3QEMU
+            unsigned long t = getTimer();
+            if(t) {
+                // TODO: support qemu
+                while(getTimer() < t+n);
+            }
+            #else
             u64 f, t, r;
-            // get the current counter frequency
-            asm volatile ("mrs %0, cntfrq_el0" : "=r" (f));
-            // read the current counter
-            asm volatile ("mrs %0, cntpct_el0" : "=r" (t));
-            // calculate expire value for counter
-            t += ((f / 1000) * n) / 1000;
-            do {
-                asm volatile ("mrs %0, cntpct_el0" : "=r" (r));
-            } while(r < t);
+            asm volatile ("mrs %0, cntfrq_el0" : "=r"(f));
+            asm volatile ("mrs %0, cntpct_el0" : "=r"(t));
+            t+=((f/1000)*n)/1000;
+            do{asm volatile ("mrs %0, cntpct_el0" : "=r"(r));}while(r<t);
+            #endif
         }
 
     }
