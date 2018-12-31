@@ -13,11 +13,13 @@
 namespace akal {
     namespace rpi3 {
 
-        class ARMTimer {
+        class ARMTimer: public Timer {
         public:
             ARMTimer();
 
             ~ARMTimer();
+
+            void init(Machine& machine);
 
             u64 getTimer();
 

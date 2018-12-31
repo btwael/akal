@@ -1,4 +1,4 @@
-.section ".textt"
+.section ".textutils"
 
 .globl irq_vector_init
 irq_vector_init:
@@ -51,8 +51,8 @@ generic_timer_reset:
 #define SCR_NS              (1 << 0)
 #define SCR_VALUE                   (SCR_RESERVED | SCR_RW | SCR_NS)
 
-.globl switchtoEL2
-switchtoEL2:
+.globl asm_rpi3_switchToEL1
+asm_rpi3_switchToEL1:
 /*    // set up EL1
     mrs     x0, CurrentEL
     and     x0, x0, #12 // clear reserved bits

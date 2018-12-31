@@ -44,7 +44,6 @@ void timer_init( void )
 }
 
 extern "C" void generic_timer_reset();
-extern "C" void timer_reset();
 
 extern "C" void show_invalid_entry_message(int type, unsigned long esr, unsigned long address) {
     machine.console.print(0, 10, "error");
@@ -59,40 +58,24 @@ extern "C" void handle_irq() {
     write32(TIMER_FLAG, (3<<30));
     #endif
 }
-#define CORE0_INT_CTR       (PERIPHERAL_BASE+0x40)
-void enable_interrupt_controller()
-{
-    #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
-    write32(CORE0_INT_CTR, (1 << 1));
-    #else
-    // Enable IRQ Core 0 - Pag. 13 BCM2836_ARM-local_peripherals
-    unsigned int local_timer_ctrl = read32(TIMER_CTRL);
-    write32(TIMER_CTRL, (local_timer_ctrl | (1 << 29)));
-    #endif
-}
 
 extern "C" void enable_irq();
 extern "C" void irq_vector_init();
-extern "C" void switchtoEL2();
 
 void startup(Machine &machine) {
-    u64 el;
-    asm volatile ("mrs %0, CurrentEL" : "=r" (el));
-    char *k = "A";
-    k[0] = '0' + ((el>>2)&3);
-    machine.console.print(0, 14, k);
-    switchtoEL2();
-    asm volatile ("mrs %0, CurrentEL" : "=r" (el));
-    k[0] = '0' + ((el>>2)&3);
-    machine.console.print(0, 15, k);
     //machine.uart0.write("Akal-based Bare-Metal Application\n");
     machine.console.print(0, 0, "Akal-based Bare-Metal Application\n");
     irq_vector_init();
     timer_init();
-    enable_interrupt_controller();
     enable_irq();
     machine.timer.delay(1e+6);
     machine.console.print(0, 28, "Waex Operating System v0.1\nBoutglay Wael-Amine");
+    for(int j = 50; j < 100; j++) {
+        for(int k = 50; k < 100; k++) {
+            machine.screen.setPixel(akal::rpi3::Point(j, k), akal::rpi3::Color(255, 0, 0));
+    }
+    }
+    machine.screen.plotLine(100, 100, 200, 200);
     int i = 1;
     while(i < 10) {
         //machine.uart0.write("Deadloop\n");

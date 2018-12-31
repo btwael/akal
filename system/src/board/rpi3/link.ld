@@ -8,7 +8,7 @@ SECTIONS {
         _start = .;
         KEEP(*(.text.boot))
         *(.text .text.* .gnu.linkonce.t*)
-        *(.textt)
+        *(.textutils)
     } > RAM
     .rodata : {
         *(.rodata .rodata.* .gnu.linkonce.r*)
