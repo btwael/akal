@@ -1,49 +1,6 @@
 #include "akal/akal.hh"
 #include "akal/kernel/mmio.hh"
 
-const char *entry_error_messages[] = {
-    "SYNC_INVALID_EL1t",
-    "IRQ_INVALID_EL1t",     
-    "FIQ_INVALID_EL1t",     
-    "ERROR_INVALID_EL1T",       
-
-    "SYNC_INVALID_EL1h",        
-    "IRQ_INVALID_EL1h",     
-    "FIQ_INVALID_EL1h",     
-    "ERROR_INVALID_EL1h",       
-
-    "SYNC_INVALID_EL0_64",      
-    "IRQ_INVALID_EL0_64",       
-    "FIQ_INVALID_EL0_64",       
-    "ERROR_INVALID_EL0_64", 
-
-    "SYNC_INVALID_EL0_32",      
-    "IRQ_INVALID_EL0_32",       
-    "FIQ_INVALID_EL0_32",       
-    "ERROR_INVALID_EL0_32"  
-};
-
-#define PERIPHERAL_BASE     0x40000000
-#define TIMER_CTRL      (PERIPHERAL_BASE+0x34)
-#define TIMER_FLAG      (PERIPHERAL_BASE+0x38)
-
-extern "C" void generic_timer_reset();
-extern "C" void timer_reset();
-
-extern "C" void show_invalid_entry_message(int type, unsigned long esr, unsigned long address) {
-    machine.console.print(0, 10, "error");
-    machine.console.print(0, 11, entry_error_messages[type]);
-}
-
-extern "C" void handle_irq() {
-    machine.console.print(0, 12, "irq");
-    #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
-        generic_timer_reset();
-    #else
-        write32(TIMER_FLAG, (3<<30));
-    #endif
-}
-
 u32 abs(i32 v) {
     return v > 0 ? v : -v;
 }

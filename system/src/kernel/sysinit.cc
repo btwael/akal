@@ -1,11 +1,11 @@
 #ifdef AKAL_APPLICATION_TARGET_RPI3
 #include "akal/board/rpi3/machine.hh"
+typedef akal::rpi3::RaspberryPi3 Machine;
 #include "src/board/rpi3/mailbox.cc"
 #include "src/board/rpi3/timer.cc"
 #include "src/board/rpi3/interrupt.cc"
 #include "src/board/rpi3/board.cc"
 #include "src/board/rpi3/device/uart.cc"
-typedef akal::rpi3::RaspberryPi3 Machine;
 #else
 #error "Unknow target platform!"
 #endif
@@ -14,6 +14,7 @@ Machine machine;
 
 void startup(Machine &machine);
 extern "C" void enable_irq();
+extern Machine *machine_ptr = NULL;
 
 extern "C" void akal_main(void) {
     akal::board::init();
@@ -38,9 +39,10 @@ extern "C" void akal_main(void) {
             }
         }
     }
+    machine_ptr = &machine;
     akal::board::setupInterruptVector(); // TODO: arch
-    machine.timer.init(machine);
     machine.interruptController.init(machine);
+    machine.timer.init(machine);
     machine.uart1.init(machine);
     machine.uart0.init(machine);
     machine.console.init();
