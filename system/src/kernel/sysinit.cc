@@ -2,6 +2,7 @@
 #include "akal/board/rpi3/machine.hh"
 #include "src/board/rpi3/mailbox.cc"
 #include "src/board/rpi3/timer.cc"
+#include "src/board/rpi3/board.cc"
 #include "src/board/rpi3/device/uart.cc"
 typedef akal::rpi3::RaspberryPi3 Machine;
 #else
@@ -13,6 +14,7 @@ Machine machine;
 void startup(Machine &machine);
 
 extern "C" void akal_main(void) {
+    akal::board::init();
     //*-- Clear bss
     extern u8 __bss_start__;
     extern u8 __bss_end__;

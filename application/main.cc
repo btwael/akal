@@ -58,7 +58,6 @@ void enable_interrupt_controller()
 
 extern "C" void enable_irq();
 extern "C" void irq_vector_init();
-extern "C" void switchtoEL2();
 
 u32 abs(i32 v) {
     return v > 0 ? v : -v;
@@ -70,7 +69,6 @@ void startup(Machine &machine) {
     char *k = "A";
     k[0] = '0' + ((el>>2)&3);
     machine.console.print(0, 14, k);
-    switchtoEL2();
     asm volatile ("mrs %0, CurrentEL" : "=r" (el));
     k[0] = '0' + ((el>>2)&3);
     machine.console.print(0, 15, k);
