@@ -30,10 +30,17 @@ unsigned int curVal = 0;
 #define TIMER_CTRL      (PERIPHERAL_BASE+0x34)
 #define TIMER_FLAG      (PERIPHERAL_BASE+0x38)
 
+extern "C" void generic_timer_init();
+
 void timer_init( void )
 {
+    #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
+    generic_timer_init();
+    #else
     // Set value, enable Timer and Interrupt
     write32(TIMER_CTRL, ((1<<28) | interval));
+    #endif
+
 }
 
 extern "C" void generic_timer_reset();
@@ -46,14 +53,22 @@ extern "C" void show_invalid_entry_message(int type, unsigned long esr, unsigned
 
 extern "C" void handle_irq() {
     machine.console.print(0, 12, "irq");
+    #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
+    generic_timer_reset();
+    #else
     write32(TIMER_FLAG, (3<<30));
+    #endif
 }
-
+#define CORE0_INT_CTR       (PERIPHERAL_BASE+0x40)
 void enable_interrupt_controller()
 {
+    #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
+    write32(CORE0_INT_CTR, (1 << 1));
+    #else
     // Enable IRQ Core 0 - Pag. 13 BCM2836_ARM-local_peripherals
     unsigned int local_timer_ctrl = read32(TIMER_CTRL);
     write32(TIMER_CTRL, (local_timer_ctrl | (1 << 29)));
+    #endif
 }
 
 extern "C" void enable_irq();
