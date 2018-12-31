@@ -9,6 +9,7 @@ unsigned int curVal = 0;
 #define PERIPHERAL_BASE     0x40000000
 #define TIMER_CTRL      (PERIPHERAL_BASE+0x34)
 #define TIMER_FLAG      (PERIPHERAL_BASE+0x38)
+#define CORE0_INT_CTR       (PERIPHERAL_BASE+0x40)
 
 namespace akal {
     namespace rpi3 {
@@ -28,6 +29,13 @@ namespace akal {
             #else
                 // Set value, enable Timer and Interrupt
                 write32(TIMER_CTRL, ((1<<28) | interval));
+            #endif
+            #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
+                write32(CORE0_INT_CTR, (1 << 1));
+            #else
+            // Enable IRQ Core 0 - Pag. 13 BCM2836_ARM-local_peripherals
+                unsigned int local_timer_ctrl = read32(TIMER_CTRL);
+                write32(TIMER_CTRL, (local_timer_ctrl | (1 << 29)));
             #endif
         }
 

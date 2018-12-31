@@ -2,6 +2,7 @@
 #include "akal/board/rpi3/machine.hh"
 #include "src/board/rpi3/mailbox.cc"
 #include "src/board/rpi3/timer.cc"
+#include "src/board/rpi3/interrupt.cc"
 #include "src/board/rpi3/board.cc"
 #include "src/board/rpi3/device/uart.cc"
 typedef akal::rpi3::RaspberryPi3 Machine;
@@ -12,6 +13,7 @@ typedef akal::rpi3::RaspberryPi3 Machine;
 Machine machine;
 
 void startup(Machine &machine);
+extern "C" void enable_irq();
 
 extern "C" void akal_main(void) {
     akal::board::init();
@@ -36,9 +38,12 @@ extern "C" void akal_main(void) {
             }
         }
     }
+    akal::board::setupInterruptVector(); // TODO: arch
     machine.timer.init(machine);
+    machine.interruptController.init(machine);
     machine.uart1.init(machine);
     machine.uart0.init(machine);
     machine.console.init();
+    enable_irq();
     startup(machine);
 }

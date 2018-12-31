@@ -44,34 +44,13 @@ extern "C" void handle_irq() {
     #endif
 }
 
-void enable_interrupt_controller()
-{
-    // Enable IRQ Core 0 - Pag. 13 BCM2836_ARM-local_peripherals
-    unsigned int local_timer_ctrl = read32(TIMER_CTRL);
-    write32(TIMER_CTRL, (local_timer_ctrl | (1 << 29)));
-}
-
-extern "C" void enable_irq();
-extern "C" void irq_vector_init();
-
 u32 abs(i32 v) {
     return v > 0 ? v : -v;
 }
 
 void startup(Machine &machine) {
-    u64 el;
-    asm volatile ("mrs %0, CurrentEL" : "=r" (el));
-    char *k = "A";
-    k[0] = '0' + ((el>>2)&3);
-    machine.console.print(0, 14, k);
-    asm volatile ("mrs %0, CurrentEL" : "=r" (el));
-    k[0] = '0' + ((el>>2)&3);
-    machine.console.print(0, 15, k);
     //machine.uart0.write("Akal-based Bare-Metal Application\n");
     machine.console.print(0, 0, "Akal-based Bare-Metal Application\n");
-    irq_vector_init();
-    enable_interrupt_controller();
-    enable_irq();
     machine.timer.delay(1e+6);
     machine.console.print(0, 28, "Waex Operating System v0.1\nBoutglay Wael-Amine");
     for(int j = 50; j < 100; j++) {

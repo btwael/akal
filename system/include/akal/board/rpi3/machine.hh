@@ -7,6 +7,7 @@
 #include "akal/kernel/timer.hh"
 // akal/board/rpi3
 #include "akal/board/rpi3/timer.hh"
+#include "akal/board/rpi3/interrupt.hh"
 #include "akal/board/rpi3/mailbox.hh"
 #include "akal/board/rpi3/device/uart.hh"
 
@@ -193,6 +194,7 @@ void print(int x, int y, const char *s)
         //*-- RaspberryPi3
         class RaspberryPi3: public Machine {
         public:
+            InterruptController interruptController;
             Uart1Device uart1;
             Uart0Device uart0;
             ARMTimer timer;

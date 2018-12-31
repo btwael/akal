@@ -121,9 +121,8 @@ exit:  ret*/
     adr x0, el1_entry       
     msr elr_el2, x0         // 'elr_el3' changed to 'elr_el2'
 #endif
-    eret                
-
-el1_entry:ret
+    eret
+el1_entry: ret
 
 
 #define S_FRAME_SIZE            256         // size of all saved registers 
