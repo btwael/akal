@@ -4,6 +4,7 @@
 // akal/kernel
 #include "akal/kernel/mmio.hh"
 #include "akal/kernel/timer.hh"
+#include "akal/kernel/machine.hh"
 
 #define MMIO_BASE       (0x3f000000)
 
@@ -18,6 +19,8 @@ namespace akal {
             ARMTimer();
 
             ~ARMTimer();
+
+            void init(Machine& machine);
 
             u64 getTimer();
 

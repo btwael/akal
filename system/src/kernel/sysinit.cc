@@ -36,6 +36,7 @@ extern "C" void akal_main(void) {
             }
         }
     }
+    machine.timer.init(machine);
     machine.uart1.init(machine);
     machine.uart0.init(machine);
     machine.console.init();

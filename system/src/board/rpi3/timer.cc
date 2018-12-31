@@ -1,6 +1,15 @@
 // akal/board
 #include "akal/board/rpi3/timer.hh"
 
+extern "C" void generic_timer_init();
+
+const unsigned int interval = 20000000;
+unsigned int curVal = 0;
+
+#define PERIPHERAL_BASE     0x40000000
+#define TIMER_CTRL      (PERIPHERAL_BASE+0x34)
+#define TIMER_FLAG      (PERIPHERAL_BASE+0x38)
+
 namespace akal {
     namespace rpi3 {
 
@@ -11,6 +20,15 @@ namespace akal {
 
         ARMTimer::~ARMTimer() {
             // nothing go here
+        }
+
+        void ARMTimer::init(Machine& machine) {
+            #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
+                generic_timer_init();
+            #else
+                // Set value, enable Timer and Interrupt
+                write32(TIMER_CTRL, ((1<<28) | interval));
+            #endif
         }
 
         u64 ARMTimer::getTimer(){

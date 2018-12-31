@@ -23,18 +23,9 @@ const char *entry_error_messages[] = {
     "ERROR_INVALID_EL0_32"  
 };
 
-const unsigned int interval = 20000000;
-unsigned int curVal = 0;
-
 #define PERIPHERAL_BASE     0x40000000
 #define TIMER_CTRL      (PERIPHERAL_BASE+0x34)
 #define TIMER_FLAG      (PERIPHERAL_BASE+0x38)
-
-void timer_init( void )
-{
-    // Set value, enable Timer and Interrupt
-    write32(TIMER_CTRL, ((1<<28) | interval));
-}
 
 extern "C" void generic_timer_reset();
 extern "C" void timer_reset();
@@ -46,7 +37,11 @@ extern "C" void show_invalid_entry_message(int type, unsigned long esr, unsigned
 
 extern "C" void handle_irq() {
     machine.console.print(0, 12, "irq");
-    write32(TIMER_FLAG, (3<<30));
+    #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
+        generic_timer_reset();
+    #else
+        write32(TIMER_FLAG, (3<<30));
+    #endif
 }
 
 void enable_interrupt_controller()
@@ -75,7 +70,6 @@ void startup(Machine &machine) {
     //machine.uart0.write("Akal-based Bare-Metal Application\n");
     machine.console.print(0, 0, "Akal-based Bare-Metal Application\n");
     irq_vector_init();
-    timer_init();
     enable_interrupt_controller();
     enable_irq();
     machine.timer.delay(1e+6);
