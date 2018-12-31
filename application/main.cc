@@ -60,6 +60,10 @@ extern "C" void enable_irq();
 extern "C" void irq_vector_init();
 extern "C" void switchtoEL2();
 
+u32 abs(i32 v) {
+    return v > 0 ? v : -v;
+}
+
 void startup(Machine &machine) {
     u64 el;
     asm volatile ("mrs %0, CurrentEL" : "=r" (el));
@@ -78,6 +82,12 @@ void startup(Machine &machine) {
     enable_irq();
     machine.timer.delay(1e+6);
     machine.console.print(0, 28, "Waex Operating System v0.1\nBoutglay Wael-Amine");
+    for(int j = 50; j < 100; j++) {
+        for(int k = 50; k < 100; k++) {
+            machine.screen.setPixel(akal::rpi3::Point(j, k), akal::rpi3::Color(255, 0, 0));
+    }
+    }
+    machine.screen.plotLine(100, 100, 200, 200);
     int i = 1;
     while(i < 10) {
         //machine.uart0.write("Deadloop\n");
