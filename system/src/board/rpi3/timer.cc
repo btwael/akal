@@ -1,10 +1,6 @@
 // akal/board
 #include "akal/board/rpi3/timer.hh"
 
-#define PERIPHERAL_BASE     0x40000000
-#define TIMER_CTRL      (PERIPHERAL_BASE+0x34)
-#define CORE0_INT_CTR       (PERIPHERAL_BASE+0x40)
-
 namespace akal {
     namespace rpi3 {
 
@@ -15,17 +11,6 @@ namespace akal {
 
         ARMTimer::~ARMTimer() {
             // nothing go here
-        }
-
-        void ARMTimer::init(Machine& machine) {
-            // Enable Timer IRQ for core0
-            // Enable IRQ Core 0 - Pag. 13 BCM2836_ARM-local_peripherals
-            #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
-                write32(CORE0_INT_CTR, (1 << 1));
-            #else
-                unsigned int local_timer_ctrl = read32(TIMER_CTRL);
-                write32(TIMER_CTRL, (local_timer_ctrl | (1 << 29)));
-            #endif
         }
 
         u64 ARMTimer::getTimer(){

@@ -2,27 +2,20 @@
 #define BOUTGLAY_AKAL_BOARD_RPI3_MACHINE_HH
 
 // akal/kernel
-#include "akal/core/types.hh"
 #include "akal/kernel/machine.hh"
 #include "akal/kernel/mmio.hh"
 #include "akal/kernel/timer.hh"
 // akal/board/rpi3
-#include "akal/board/rpi3/interrupt.hh"
 #include "akal/board/rpi3/timer.hh"
 #include "akal/board/rpi3/mailbox.hh"
 #include "akal/board/rpi3/device/uart.hh"
 
 extern volatile unsigned char _binary_system_resources_font_psf_start;
 
+u32 abs(i32 v);
+
 namespace akal {
     namespace rpi3 {
-
-        u32 abs(i32 v) {
-            return v > 0 ? v : -v;
-        }
-
-        u8 *lfb;
-        u32 width, height, pitch;
 
         class Point {
         public:
@@ -37,9 +30,12 @@ namespace akal {
             Color(u8 r, u8 g, u8 b) : r(r), g(g), b(b) {}
         };
 
+        u8 *lfb;
+            u32 width, height, pitch;
+
         class Screen {
         public:
-            void setPixel(Point p, Color c) {
+void setPixel(Point p, Color c) {
                 char pixel[4];
                 pixel[0] = c.b;
                 pixel[1] = c.g;
@@ -61,7 +57,6 @@ namespace akal {
       if (e2 <= dx) { err += dx; y0 += sy; } /* e_xy+e_y < 0 */
    }
 }
-
         };
 
         typedef struct {
@@ -78,6 +73,7 @@ namespace akal {
 
         class Console {
         private:
+            
         public:
             void init() {
                 mbox[0] = 35*4;
@@ -197,7 +193,6 @@ void print(int x, int y, const char *s)
         //*-- RaspberryPi3
         class RaspberryPi3: public Machine {
         public:
-            InterruptSystem interruptSystem;
             Uart1Device uart1;
             Uart0Device uart0;
             ARMTimer timer;

@@ -1,4 +1,4 @@
-.section ".textutils"
+.section ".textt"
 
 .globl irq_vector_init
 irq_vector_init:
@@ -16,11 +16,22 @@ disable_irq:
     msr daifset, #2
     ret
 
-.globl generic_timer_init
-generic_timer_init:
+.globl timer_init
+timer_init:
     mov x0, #1
     msr CNTP_CTL_EL0, x0
+    bl timer_reset
     ret
+
+.globl timer_reset
+timer_reset:
+    adr x1, tinterval
+    ldr x0, [x1]
+    msr CNTP_TVAL_EL0, x0
+    ret
+
+.globl tinterval
+tinterval: .8byte 38461538;
 
 .globl generic_timer_reset
 generic_timer_reset:
@@ -51,8 +62,8 @@ generic_timer_reset:
 #define SCR_NS              (1 << 0)
 #define SCR_VALUE                   (SCR_RESERVED | SCR_RW | SCR_NS)
 
-.globl asm_rpi3_switchToEL1
-asm_rpi3_switchToEL1:
+.globl switchtoEL2
+switchtoEL2:
 /*    // set up EL1
     mrs     x0, CurrentEL
     and     x0, x0, #12 // clear reserved bits
@@ -93,7 +104,6 @@ el2t1:  cmp     x0, #4
     eret
 
 exit:  ret*/
-#ifndef AKAL_APPLICATION_TARGET_RPI3QEMU
     ldr x0, =SCTLR_VALUE_MMU_DISABLED
     msr sctlr_el1, x0       
 
@@ -108,19 +118,6 @@ exit:  ret*/
 
     adr x0, el1_entry       
     msr elr_el3, x0
-#else
-    ldr x0, =SCTLR_VALUE_MMU_DISABLED
-    msr sctlr_el1, x0       
-
-    ldr x0, =HCR_VALUE
-    msr hcr_el2, x0
-    
-    ldr x0, =SPSR_VALUE
-    msr spsr_el2, x0        // 'spsr_el3' changed to 'spsr_el2'
-
-    adr x0, el1_entry       
-    msr elr_el2, x0         // 'elr_el3' changed to 'elr_el2'
-#endif
 
     eret                
 

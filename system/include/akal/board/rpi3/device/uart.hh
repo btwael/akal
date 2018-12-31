@@ -16,7 +16,7 @@ namespace akal {
 
             ~Uart1Device();
 
-            void init(Machine& machine);
+            void init();
 
             void write(i32 c);
 
@@ -30,7 +30,7 @@ namespace akal {
 
             ~Uart0Device();
 
-            void init(Machine& machine);
+            void init();
 
             void write(i32 c);
 

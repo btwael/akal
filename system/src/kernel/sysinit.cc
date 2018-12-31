@@ -1,7 +1,8 @@
-#include "akal/kernel/board.hh"
-
 #ifdef AKAL_APPLICATION_TARGET_RPI3
-#include "src/board/rpi3/include.cc"
+#include "akal/board/rpi3/machine.hh"
+#include "src/board/rpi3/mailbox.cc"
+#include "src/board/rpi3/timer.cc"
+#include "src/board/rpi3/device/uart.cc"
 typedef akal::rpi3::RaspberryPi3 Machine;
 #else
 #error "Unknow target platform!"
@@ -12,7 +13,6 @@ Machine machine;
 void startup(Machine &machine);
 
 extern "C" void akal_main(void) {
-    akal::board::init();
     //*-- Clear bss
     extern u8 __bss_start__;
     extern u8 __bss_end__;
@@ -34,10 +34,8 @@ extern "C" void akal_main(void) {
             }
         }
     }
-    machine.interruptSystem.init(machine);
-    machine.timer.init(machine);
-    machine.uart1.init(machine);
-    machine.uart0.init(machine);
+    machine.uart1.init();
+    machine.uart0.init();
     machine.console.init();
     startup(machine);
 }

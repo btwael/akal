@@ -59,7 +59,7 @@ namespace akal {
             // nothing go here
         }
 
-        void Uart1Device::init(Machine& machine) {
+        void Uart1Device::init() {
             u32 r;
             write32(AUX_ENABLE, 0x1); // TODO: this may disable other stuff.
             write32(AUX_MU_IER, 0x0);
@@ -109,7 +109,7 @@ namespace akal {
             // nothing go here
         }
 
-        void Uart0Device::init(Machine& machine) {
+        void Uart0Device::init() {
             u32 r;
             write32(UART0_CR, 0);
             rpi3::mbox[0] = 8*4;

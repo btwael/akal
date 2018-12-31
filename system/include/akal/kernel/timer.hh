@@ -4,8 +4,6 @@
 // akal/core
 #include "akal/core/types.hh"
 
-#include "akal/kernel/device.hh"
-
 namespace akal {
 
     //*-- TimeUnit
@@ -19,13 +17,11 @@ namespace akal {
     };
 
     //*-- Timer
-    class Timer: public Device {
+    class Timer {
     public:
         Timer();
 
         virtual ~Timer();
-
-        virtual void init(Machine& machine) = 0;
 
         virtual u64 getTimer() = 0;
 

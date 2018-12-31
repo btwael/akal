@@ -9,12 +9,6 @@ def compileCpp(input, output, define_list):
         l += " -D" + define
     system(l)
 
-def compileAsm(input, output, define_list):
-    l = "aarch64-none-elf-gcc -Isystem -Isystem/include -Wall -ffreestanding -nostdinc -nostdlib -c "
-    l = l + input + " -o " + output
-    for define in define_list:
-        l += " -D" + define
-    system(l)
 
 requirement_map = {
     "uart": "AKAL_APPLICATION_TARGET_REQUIRE_UART"
@@ -39,8 +33,10 @@ if config["target"].startswith("rpi3"):
 compileCpp("./application/main.cc", "./build/main.o", pp_define)
 #system(
 #    "clang -target aarch64-none-elf -Wall -ffreestanding -nostdinc -nostdlib -c ./system/src/board/rpi3/startup.S -o ./build/startup.o")
-compileAsm("./system/src/board/rpi3/startup.S", "./build/startup.o", pp_define)
-compileAsm("./system/src/board/rpi3/entry.S", "./build/entry.o", pp_define)
+system(
+    "aarch64-none-elf-gcc -Wall -ffreestanding -nostdinc -nostdlib -c ./system/src/board/rpi3/startup.S -o ./build/startup.o")
+system(
+    "aarch64-none-elf-gcc -Wall -ffreestanding -nostdinc -nostdlib -c ./system/src/board/rpi3/entry.S -o ./build/entry.o")
 system(
     "aarch64-none-elf-ld -r -b binary -o ./build/font.o system/resources/font.psf")
 system(

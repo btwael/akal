@@ -1,6 +1,0 @@
-#include "src/board/rpi3/board.cc"
-#include "src/board/rpi3/machine.cc"
-#include "src/board/rpi3/interrupt.cc"
-#include "src/board/rpi3/mailbox.cc"
-#include "src/board/rpi3/timer.cc"
-#include "src/board/rpi3/device/uart.cc"

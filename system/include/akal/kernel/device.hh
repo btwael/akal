@@ -3,8 +3,6 @@
 
 // akal/core
 #include "akal/core/types.hh"
-// akal/kernel
-#include "akal/kernel/machine.hh"
 
 namespace akal {
 
@@ -14,16 +12,16 @@ namespace akal {
 
         virtual ~Device();
 
-        virtual void init(Machine& machine) = 0;
+        virtual void init() = 0;
     };
 
-    class UartDevice: public Device {
+    class UartDevice {
     public:
         UartDevice();
 
         virtual ~UartDevice();
 
-        virtual void init(Machine& machine) = 0;
+        virtual void init() = 0;
 
         virtual void write(i32 c) = 0;
 
