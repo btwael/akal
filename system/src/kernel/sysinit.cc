@@ -36,8 +36,8 @@ extern "C" void akal_main(void) {
             }
         }
     }
-    machine.uart1.init();
-    machine.uart0.init();
+    machine.uart1.init(machine);
+    machine.uart0.init(machine);
     machine.console.init();
     startup(machine);
 }

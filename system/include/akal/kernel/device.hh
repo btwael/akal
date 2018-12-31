@@ -4,6 +4,8 @@
 // akal/core
 #include "akal/core/types.hh"
 
+#include "akal/kernel/machine.hh"
+
 namespace akal {
 
     class Device {
@@ -12,7 +14,7 @@ namespace akal {
 
         virtual ~Device();
 
-        virtual void init() = 0;
+        virtual void init(Machine& machine) = 0;
     };
 
     class UartDevice {
@@ -21,7 +23,7 @@ namespace akal {
 
         virtual ~UartDevice();
 
-        virtual void init() = 0;
+        virtual void init(Machine& machine) = 0;
 
         virtual void write(i32 c) = 0;
 
