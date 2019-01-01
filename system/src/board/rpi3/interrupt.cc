@@ -112,6 +112,7 @@ namespace akal {
 
         extern "C" void show_invalid_entry_message(int type, unsigned long esr, unsigned long address) {
             machine_ptr->console.print(0, 10, "error");
+            machine_ptr->uart0.hex(esr);
             machine_ptr->console.print(0, 11, entry_error_messages[type]);
         }
 

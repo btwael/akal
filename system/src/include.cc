@@ -3,4 +3,5 @@
 #include "kernel/mmio.cc"
 #include "kernel/new.cc"
 #include "kernel/sysinit.cc"
+#include "kernel/task.cc"
 #include "kernel/timer.cc"

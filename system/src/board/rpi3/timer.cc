@@ -26,6 +26,7 @@ namespace akal {
             #else
                 write32(TIMER_FLAG, (3<<30));
             #endif
+            machine_ptr->scheduler.schedule();
         }
 
         //*-- ARMTimer

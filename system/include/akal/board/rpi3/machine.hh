@@ -5,6 +5,7 @@
 #include "akal/kernel/machine.hh"
 #include "akal/kernel/mmio.hh"
 #include "akal/kernel/timer.hh"
+#include "akal/kernel/task.hh"
 // akal/board/rpi3
 #include "akal/board/rpi3/timer.hh"
 #include "akal/board/rpi3/interrupt.hh"
@@ -200,6 +201,7 @@ void print(int x, int y, const char *s)
             ARMTimer timer;
             Screen screen;
             Console console;
+            Scheduler scheduler;
         };
 
     }

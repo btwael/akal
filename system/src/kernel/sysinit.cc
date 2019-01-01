@@ -12,7 +12,7 @@ typedef akal::rpi3::RaspberryPi3 Machine;
 
 Machine machine;
 
-void startup(Machine &machine);
+void startup(void *arg);
 extern "C" void enable_irq();
 extern Machine *machine_ptr = NULL;
 
@@ -46,6 +46,9 @@ extern "C" void akal_main(void) {
     machine.uart1.init(machine);
     machine.uart0.init(machine);
     machine.console.init();
+    machine.scheduler.init();
+    machine.scheduler.addTask(startup, 4, (u64) &machine);
     enable_irq();
-    startup(machine);
+    //startup(machine);
+    while(1) {}
 }

@@ -1,6 +1,6 @@
 #include "akal/core/types.hh"
 
-Size k = 0x90000;
+Size k = 0x100000;
 
 void *operator new(Size sz) {
     return (void *) (k += sz);
