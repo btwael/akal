@@ -25,6 +25,7 @@ namespace akal {
         long counter;
         long priority;
         long preempt_count;
+        long pid;
     } Task;
 
     typedef void TASKHandler(void *);

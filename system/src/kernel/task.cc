@@ -7,13 +7,13 @@ extern "C" void schedule(void) {
     machine_ptr->scheduler.schedule();
 }
 extern "C" void end_pid(u64 pid) {
-    machine_ptr->scheduler._tasks[pid]->state = 0;
-//    machine_ptr->uart0.hex(pid);
-//    machine_ptr->uart0.write("close\n");
+//machine_ptr->uart0.hex(machine_ptr->scheduler.current->pid);
+    //machine_ptr->uart0.write("close\n");
+    machine_ptr->scheduler._tasks[machine_ptr->scheduler.current->pid]->state = 0;
 }
 extern "C" void notify_pid(u64 pid) {
-    machine_ptr->uart0.hex(pid);
-    machine_ptr->uart0.write("not\n");
+    //machine_ptr->uart0.hex(machine_ptr->scheduler.current->pid);
+    //machine_ptr->uart0.write("not\n");
 }
     extern "C" void enable_irq();
     extern "C" void disable_irq();
@@ -44,9 +44,9 @@ namespace akal {
             p->cpu_context.pc = (unsigned long) ret_from_fork;
             p->cpu_context.sp = (unsigned long) p + 1000;
             int pid = cc++;
-            p->cpu_context.x21 = pid;
-            machine_ptr->uart0.hex(pid);
-            machine_ptr->uart0.write("create\n");
+            p->cpu_context.x21 = p->pid = pid;
+            //machine_ptr->uart0.hex(pid);
+            //machine_ptr->uart0.write("create\n");
             _tasks[pid] = p;
             preempt_enable();
         }
@@ -54,6 +54,8 @@ namespace akal {
                 void Scheduler::preempt_disable(void)
 {
     if(current) {
+      //  machine_ptr->uart0.hex(machine_ptr->scheduler.current->pid);
+    //machine_ptr->uart0.write("preedisa\n");
     current->preempt_count++;
 }
 }
@@ -61,6 +63,8 @@ namespace akal {
 void Scheduler::preempt_enable(void)
 {
     if(current) {
+       // machine_ptr->uart0.hex(machine_ptr->scheduler.current->pid);
+    //machine_ptr->uart0.write("preeena\n");
     current->preempt_count--;
 }
 }
@@ -69,7 +73,7 @@ void Scheduler::preempt_enable(void)
             if(cc == 0) {
                 return;
             }
-            if(current) {
+            if(current && current->state == 1) {
             --current->counter;
             if(current->counter > 0 || current->preempt_count >0) {
                 return;
@@ -99,10 +103,10 @@ void Scheduler::preempt_enable(void)
                     }
                 }
             }
-            machine_ptr->uart0.hex(next);
-            machine_ptr->uart0.write("next\n");
-            machine_ptr->uart0.hex((u64) _tasks[next]->cpu_context.pc);
-            machine_ptr->uart0.write("nextp\n");
+//            machine_ptr->uart0.hex(next);
+//            machine_ptr->uart0.write("next\n");
+//            machine_ptr->uart0.hex((u64) _tasks[next]->cpu_context.pc);
+//            machine_ptr->uart0.write("nextp\n");
             enable_irq();
             switchTo(_tasks[next]);
             preempt_enable();

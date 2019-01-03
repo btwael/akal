@@ -38,8 +38,7 @@ ret_from_fork:
     blr    x19
     mov x0, x21
     bl end_pid
-1: nop
-    b 1b
+    bl schedule
 
 
 .globl cpu_switch_to
