@@ -5,7 +5,7 @@
 #include "akal/kernel/machine.hh"
 #include "akal/kernel/mmio.hh"
 #include "akal/kernel/timer.hh"
-#include "akal/kernel/task.hh"
+#include "akal/kernel/scheduler.hh"
 // akal/board/rpi3
 #include "akal/board/rpi3/timer.hh"
 #include "akal/board/rpi3/interrupt.hh"
@@ -19,65 +19,21 @@ u32 abs(i32 v);
 namespace akal {
     namespace rpi3 {
 
-        class Point {
-        public:
-            u32 x, y;
-
-            Point(u32 x, u32 y) : x(x), y(y) {}
-        };
-
-        class Color {
-        public:
-            u8 r, g, b;
-            Color(u8 r, u8 g, u8 b) : r(r), g(g), b(b) {}
-        };
-
         u8 *lfb;
             u32 width, height, pitch;
 
-        class Screen {
+        class RPiScreen: public ScreenDevice {
         public:
-void setPixel(Point p, Color c) {
-                char pixel[4];
-                pixel[0] = c.b;
-                pixel[1] = c.g;
-                pixel[2] = c.r;
-                *((u32 *)(lfb + (p.y > 1 ? p.y - 1 : 0) * width * 4 + p.x * 4)) = *((u32 *) &pixel);
+
+            RPiScreen() {
+                // nothing happen here
             }
 
-            void plotLine(int x0, int y0, int x1, int y1)
-{
-   int dx =  abs(x1-x0), sx = x0<x1 ? 1 : -1;
-   int dy = -abs(y1-y0), sy = y0<y1 ? 1 : -1; 
-   int err = dx+dy, e2; /* error value e_xy */
- 
-   for(;;){  /* loop */
-      setPixel(Point(x0,y0), Color(255, 0, 0));
-      if (x0==x1 && y0==y1) break;
-      e2 = 2*err;
-      if (e2 >= dy) { err += dy; x0 += sx; } /* e_xy+e_x > 0 */
-      if (e2 <= dx) { err += dx; y0 += sy; } /* e_xy+e_y < 0 */
-   }
-}
-        };
+            ~RPiScreen() {
+                // nothing happen here
+            }
 
-        typedef struct {
-    unsigned int magic;
-    unsigned int version;
-    unsigned int headersize;
-    unsigned int flags;
-    unsigned int numglyph;
-    unsigned int bytesperglyph;
-    unsigned int height;
-    unsigned int width;
-    unsigned char glyphs;
-} __attribute__((packed)) psf_t;
-
-        class Console {
-        private:
-            
-        public:
-            void init() {
+            void init(Machine& machine) {
                 mbox[0] = 35*4;
                 mbox[1] = MBOX_REQUEST;
 
@@ -145,6 +101,58 @@ void setPixel(Point p, Color c) {
                     ptr+=pitch-width*4;
                 }
             }
+
+            void setPixel(Point p, Color c) {
+                char pixel[4];
+                pixel[0] = c.b;
+                pixel[1] = c.g;
+                pixel[2] = c.r;
+                *((u32 *)(lfb + (p.y > 1 ? p.y - 1 : 0) * width * 4 + p.x * 4)) = *((u32 *) &pixel);
+            }
+
+            void plotLine(Point p0, Point p1, Color color) {
+                int x0 = p0.x, y0 = p0.y, x1 = p1.x, y1 = p1.y;
+                int dx =  abs(x1-x0), sx = x0<x1 ? 1 : -1;
+                int dy = -abs(y1-y0), sy = y0<y1 ? 1 : -1; 
+                int err = dx+dy, e2;
+             
+                for(;;){
+                    this->setPixel(Point(x0,y0), color);
+                    if(x0 == x1 && y0 == y1) {
+                        break;
+                    }
+                    e2 = 2 * err;
+                    if(e2 >= dy) {
+                        err += dy;
+                        x0 += sx;
+                    }
+                    if(e2 <= dx) {
+                        err += dx;
+                        y0 += sy;
+                    }
+                }
+            }
+        };
+
+        typedef struct {
+    unsigned int magic;
+    unsigned int version;
+    unsigned int headersize;
+    unsigned int flags;
+    unsigned int numglyph;
+    unsigned int bytesperglyph;
+    unsigned int height;
+    unsigned int width;
+    unsigned char glyphs;
+} __attribute__((packed)) psf_t;
+
+        class Console {
+        private:
+            
+        public:
+            void init() {
+                
+            }
             /**
  * Display a string
  */
@@ -199,7 +207,7 @@ void print(int x, int y, const char *s)
             Uart1Device uart1;
             Uart0Device uart0;
             ARMTimer timer;
-            Screen screen;
+            RPiScreen screen;
             Console console;
             Scheduler scheduler;
         };

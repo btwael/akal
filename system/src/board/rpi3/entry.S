@@ -6,16 +6,6 @@ irq_vector_init:
     msr vbar_el1, x0        // vector table address
     ret
 
-.globl enable_irq
-enable_irq:
-    msr daifclr, #2
-    ret
-
-.globl disable_irq
-disable_irq:
-    msr daifset, #2
-    ret
-
 .globl generic_timer_init
 generic_timer_init:
     mov x0, #1
@@ -86,8 +76,8 @@ cpu_switch_to:
 #define SCR_NS              (1 << 0)
 #define SCR_VALUE                   (SCR_RESERVED | SCR_RW | SCR_NS)
 
-.globl asm_rpi3_switchToEL1
-asm_rpi3_switchToEL1:
+.globl asm_rpi3_aarch64_switchToEL1
+asm_rpi3_aarch64_switchToEL1:
 #ifndef AKAL_APPLICATION_TARGET_RPI3QEMU
     ldr x0, =SCTLR_VALUE_MMU_DISABLED
     msr sctlr_el1, x0       

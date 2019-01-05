@@ -1,4 +1,5 @@
 #ifdef AKAL_APPLICATION_TARGET_RPI3
+#include "src/arch/aarch64/interrupt.cc"
 #include "akal/board/rpi3/machine.hh"
 typedef akal::rpi3::RaspberryPi3 Machine;
 #include "src/board/rpi3/mailbox.cc"
@@ -45,10 +46,11 @@ extern "C" void akal_sysinit(void) {
     machine.timer.init(machine);
     machine.uart1.init(machine);
     machine.uart0.init(machine);
+    machine.screen.init(machine);
     machine.console.init();
     machine.scheduler.init();
     machine.scheduler.addTask(startup, 4, (u64) &machine);
-    enable_irq();
+    akal::arch::enableInterrupts();
     //startup(machine);
     while(1) {}
 }

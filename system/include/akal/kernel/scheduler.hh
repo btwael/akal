@@ -1,31 +1,39 @@
 #ifndef BOUTGLAY_AKAL_KERNEL_TASK_HH
 #define BOUTGLAY_AKAL_KERNEL_TASK_HH
 
+#include "akal/core/types.hh"
+
 namespace akal {
 
     struct cpu_context {
-        unsigned long x19;
-        unsigned long x20;
-        unsigned long x21;
-        unsigned long x22;
-        unsigned long x23;
-        unsigned long x24;
-        unsigned long x25;
-        unsigned long x26;
-        unsigned long x27;
-        unsigned long x28;
-        unsigned long fp;
-        unsigned long sp;
-        unsigned long pc;
+        u64 x19;
+        u64 x20;
+        u64 x21;
+        u64 x22;
+        u64 x23;
+        u64 x24;
+        u64 x25;
+        u64 x26;
+        u64 x27;
+        u64 x28;
+        u64 fp;
+        u64 sp;
+        u64 pc;
     };
+
+    typedef enum {
+        Thread,
+        Fiber
+    } TaskKind;
 
     typedef struct {
         struct cpu_context cpu_context;
-        long state;    
-        long counter;
-        long priority;
-        long preempt_count;
-        long pid;
+        i64 state;    
+        i64 counter;
+        i64 priority;
+        i64 preempt_count;
+        i64 pid;
+        TaskKind kind;
     } Task;
 
     typedef void TASKHandler(void *);
@@ -36,12 +44,16 @@ namespace akal {
         Task *_tasks[50];
         int t = 0;
         Task *current;
+        
         Scheduler();
+        
         void init();
+        
         void addTask(TASKHandler handler, int priority, u64 arg);
+        
         void preempt_disable(void);
 
-void preempt_enable(void);
+        void preempt_enable(void);
 
         void schedule();
 

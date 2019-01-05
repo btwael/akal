@@ -9,7 +9,7 @@ void startup3(void *arg) {
     Machine &machine = *((Machine *) arg);
     for(int j = 250; j < 300; j++) {
         for(int k = 250; k < 300; k++) {
-            machine.screen.setPixel(akal::rpi3::Point(j, k), akal::rpi3::Color(0, 0, 255));
+            machine.screen.setPixel(akal::Point(j, k), akal::Color(0, 0, 255));
     }
     machine.timer.delay(1e+5);
     }
@@ -19,7 +19,7 @@ void startup2(void *arg) {
     Machine &machine = *((Machine *) arg);
     for(int j = 200; j < 250; j++) {
         for(int k = 200; k < 250; k++) {
-            machine.screen.setPixel(akal::rpi3::Point(j, k), akal::rpi3::Color(255, 0, 0));
+            machine.screen.setPixel(akal::Point(j, k), akal::Color(255, 0, 0));
     }
     machine.timer.delay(1e+5);
     }
@@ -35,11 +35,11 @@ void startup(void *arg) {
     machine.console.print(0, 28, "Waex Operating System v0.1\nBoutglay Wael-Amine");
     for(int j = 50; j < 100; j++) {
         for(int k = 50; k < 100; k++) {
-            machine.screen.setPixel(akal::rpi3::Point(j, k), akal::rpi3::Color(255, 0, 0));
+            machine.screen.setPixel(akal::Point(j, k), akal::Color(255, 0, 0));
             machine.timer.delay(1e+3);
     }
     }
-    machine.screen.plotLine(100, 100, 200, 200);
+    machine.screen.plotLine(akal::Point(100, 100), akal::Point(200, 200), akal::Color(0, 255, 255));
     int i = 1;
     while(i < 10) {
         //machine.uart0.write("Deadloop\n");

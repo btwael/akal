@@ -3,6 +3,7 @@ MEMORY {
 }
 SECTIONS {
     . = 0x80000;
+    __ld_start__ = .;
     .text : {
         . = ALIGN(4);
         _start = .;
@@ -76,4 +77,5 @@ SECTIONS {
         . = ALIGN(16);
         __stack_cores3_end__ = .;  
     } > RAM
+    __ld_end__ = .;
 }

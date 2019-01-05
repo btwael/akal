@@ -35,4 +35,13 @@ namespace akal {
         this->writeAsHex(*(((unsigned int *) &d) + 1));
         this->writeAsHex(*((unsigned int *) &d));
     }
+
+    //*-- ScreenDevice
+    ScreenDevice::ScreenDevice() {
+        // nothing go here
+    }
+
+    ScreenDevice::~ScreenDevice() {
+        // nothing go here
+    }
 }
