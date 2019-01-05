@@ -1,5 +1,5 @@
 MEMORY {
-    RAM (xrw) : ORIGIN = 0x80000 , LENGTH = 0x8000000
+    RAM (xrw) : ORIGIN = 0x80000 , LENGTH = 0x3B9ACA0
 }
 SECTIONS {
     . = 0x80000;
@@ -39,5 +39,41 @@ SECTIONS {
         __stack_cores0_el2__ = .;
         . = ALIGN(16);
         __stack_cores0_end__ = .;  
+    } > RAM
+    .stack_core1 : {
+        . = ALIGN(16);
+        __stack_cores1_start__ = .;
+        . = . + 512;
+        __stack_cores1_el0__ = .;
+        . = . + 32768;
+        __stack_cores1_el1__ = .;
+        . = . + 16384;
+        __stack_cores1_el2__ = .;
+        . = ALIGN(16);
+        __stack_cores1_end__ = .;  
+    } > RAM
+    .stack_core2 : {
+        . = ALIGN(16);
+        __stack_cores2_start__ = .;
+        . = . + 512;
+        __stack_cores2_el0__ = .;
+        . = . + 32768;
+        __stack_cores2_el1__ = .;
+        . = . + 16384;
+        __stack_cores2_el2__ = .;
+        . = ALIGN(16);
+        __stack_cores2_end__ = .;  
+    } > RAM
+    .stack_core3 : {
+        . = ALIGN(16);
+        __stack_cores3_start__ = .;
+        . = . + 512;
+        __stack_cores3_el0__ = .;
+        . = . + 32768;
+        __stack_cores3_el1__ = .;
+        . = . + 16384;
+        __stack_cores3_el2__ = .;
+        . = ALIGN(16);
+        __stack_cores3_end__ = .;  
     } > RAM
 }

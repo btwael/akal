@@ -16,11 +16,11 @@ void startup(void *arg);
 extern "C" void enable_irq();
 extern Machine *machine_ptr = NULL;
 
-extern "C" void akal_main(void) {
+extern "C" void akal_sysinit(void) {
     akal::board::init();
     //*-- Clear bss
-    extern u8 __bss_start__;
-    extern u8 __bss_end__;
+    extern u8 __bss_start__; // defined in the ld linker file
+    extern u8 __bss_end__;   // defined in the ld linker file
     u8 *p = &__bss_start__;
     for(; p + sizeof(u32) < &__bss_end__; p += sizeof(u32)) {
         *((u32 *) p) = 0x0;
@@ -30,8 +30,8 @@ extern "C" void akal_main(void) {
     }
 
     //*-- Call constructors for global variable
-    extern void (*__init_start__)(void);
-    extern void (*__init_end__)(void);
+    extern void (*__init_start__)(void); // defined in the ld linker file
+    extern void (*__init_end__)(void);   // defined in the ld linker file
     if(((u64) __init_start__) < ((u64) __init_end__)) {
         for(void (**pFunc) (void) = &__init_start__; pFunc < &__init_end__; pFunc++) {
             if(*pFunc != NULL) {

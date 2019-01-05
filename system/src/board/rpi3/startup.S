@@ -4,13 +4,14 @@
 _start:
     mrs     x1, mpidr_el1
     and     x1, x1, #3
-    cbz     x1, 3f
-    b hang
-3:
-    bl coreStackInit
+    cbz     x1, 1f
+    b       hang
+1:
+    bl      coreStackInit
 
-    bl      akal_main
-hang: wfe
+    bl      akal_sysinit
+hang:
+    wfi
     b       hang
 
 coreStackInit:
@@ -19,8 +20,8 @@ coreStackInit:
     ldr     x4, =__stack_cores0_el0__
     mrs     x0, mpidr_el1
     ands    x0, x0, #0x3
-    beq     .set_stacks
-    /*ldr     x2, =__stack_cores1_el2__
+    cbz     x0, .set_stacks
+    ldr     x2, =__stack_cores1_el2__
     ldr     x3, =__stack_cores1_el1__
     ldr     x4, =__stack_cores1_el0__
     cmp     x0, #1
@@ -32,7 +33,7 @@ coreStackInit:
     beq     .set_stacks
     ldr     x2, =__stack_cores2_el2__
     ldr     x3, =__stack_cores2_el1__
-    ldr     x4, =__stack_cores2_el0__*/
+    ldr     x4, =__stack_cores2_el0__
 .set_stacks:
     mov     sp, x2
     msr     sp_el1, x3

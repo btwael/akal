@@ -88,46 +88,6 @@ cpu_switch_to:
 
 .globl asm_rpi3_switchToEL1
 asm_rpi3_switchToEL1:
-/*    // set up EL1
-    mrs     x0, CurrentEL
-    and     x0, x0, #12 // clear reserved bits
-
-    // running at EL3?
-    cmp     x0, #12
-    bne     el2t1
-    // should never be executed, just for completeness
-    mov     x2, #0x5b1
-    msr     scr_el3, x2
-    mov     x2, #0x3c9
-    msr     spsr_el3, x2
-    adr     x2, el2t1
-    msr     elr_el3, x2
-    eret
-
-    // running at EL2?
-el2t1:  cmp     x0, #4
-    beq     exit
-    msr     sp_el1, x1
-    // enable CNTP for EL1
-    mrs     x0, cnthctl_el2
-    orr     x0, x0, #3
-    msr     cnthctl_el2, x0
-    msr     cntvoff_el2, xzr
-    // enable AArch64 in EL1
-    mov     x0, #(1 << 31)      // AArch64
-    orr     x0, x0, #(1 << 1)   // SWIO hardwired on Pi3
-    msr     hcr_el2, x0
-    mrs     x0, hcr_el2
-    ldr x0,=0x00C00800
-    msr sctlr_el1,x0
-    // change execution level to EL1
-    mov     x2, #0x3c4
-    msr     spsr_el2, x2
-    adr     x2, exit
-    msr     elr_el2, x2
-    eret
-
-exit:  ret*/
 #ifndef AKAL_APPLICATION_TARGET_RPI3QEMU
     ldr x0, =SCTLR_VALUE_MMU_DISABLED
     msr sctlr_el1, x0       

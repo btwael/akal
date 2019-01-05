@@ -10,8 +10,8 @@ void startup3(void *arg) {
     for(int j = 250; j < 300; j++) {
         for(int k = 250; k < 300; k++) {
             machine.screen.setPixel(akal::rpi3::Point(j, k), akal::rpi3::Color(0, 0, 255));
-            machine.timer.delay(1e+3);
     }
+    machine.timer.delay(1e+5);
     }
 }
 
@@ -20,8 +20,8 @@ void startup2(void *arg) {
     for(int j = 200; j < 250; j++) {
         for(int k = 200; k < 250; k++) {
             machine.screen.setPixel(akal::rpi3::Point(j, k), akal::rpi3::Color(255, 0, 0));
-            machine.timer.delay(1e+3);
     }
+    machine.timer.delay(1e+5);
     }
 }
 
