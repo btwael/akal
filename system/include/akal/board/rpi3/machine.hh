@@ -210,6 +210,7 @@ void print(int x, int y, const char *s)
             RPiScreen screen;
             Console console;
             Scheduler scheduler;
+            MemoryManager memory;
         };
 
     }
