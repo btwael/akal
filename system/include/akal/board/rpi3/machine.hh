@@ -168,7 +168,7 @@ void print(int x, int y, const char *s)
         // calculate the offset on screen
         int offs = (y * font->height * pitch) + (x * (font->width+1) * 4);
         // variables
-        int i,j, line,mask, bytesperline=(font->width+7)/8;
+        int i,j, line,mask, bytesperline = (font->width+7)/8;
         // handle carrige return
         if(*s=='\r') {
             x=0;

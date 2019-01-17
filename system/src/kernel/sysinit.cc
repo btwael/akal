@@ -14,8 +14,8 @@ typedef akal::rpi3::RaspberryPi3 Machine;
 Machine machine;
 
 void startup(void *arg);
-extern "C" void enable_irq();
-extern Machine *machine_ptr = NULL;
+
+Machine *machine_ptr = NULL;
 
 extern "C" void akal_sysinit(void) {
     akal::board::init();

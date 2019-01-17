@@ -22,14 +22,11 @@ generic_timer_reset:
 .globl ret_from_fork
 ret_from_fork:
     bl schedule_tail
-    mov x0, x21
-    bl notify_pid
     mov    x0, x20
     blr    x19
     mov x0, x21
     bl end_pid
     bl schedule
-
 
 .globl cpu_switch_to
 cpu_switch_to:

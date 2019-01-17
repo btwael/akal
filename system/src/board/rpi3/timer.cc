@@ -20,7 +20,6 @@ namespace akal {
     namespace rpi3 {
 
         void handle_timer_irq() {
-            machine_ptr->console.print(0, 12, "irq");
             #ifdef AKAL_APPLICATION_TARGET_RPI3QEMU
                 generic_timer_reset();
             #else

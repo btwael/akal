@@ -25,6 +25,7 @@ namespace akal {
         struct s_Zone *next;
         struct s_Zone *previous;
     } Zone;
+
     typedef struct s_ZoneContainer {
         Zone zones[10];
         struct s_ZoneContainer *next;

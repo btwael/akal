@@ -9,13 +9,9 @@ extern "C" void schedule(void) {
     machine_ptr->scheduler.schedule();
 }
 extern "C" void end_pid(u64 pid) {
-//machine_ptr->uart0.hex(machine_ptr->scheduler.current->pid);
-    //machine_ptr->uart0.write("close\n");
     machine_ptr->scheduler._tasks[machine_ptr->scheduler.current->pid]->state = 0;
 }
 extern "C" void notify_pid(u64 pid) {
-    //machine_ptr->uart0.hex(machine_ptr->scheduler.current->pid);
-    //machine_ptr->uart0.write("not\n");
 }
     extern "C" void enable_irq();
     extern "C" void disable_irq();
@@ -37,7 +33,6 @@ namespace akal {
             Task *p = (Task *) new u8[1000];
 
             p->priority = priority;
-            //p->state = TASK_RUNNING;
             p->counter = p->priority;
             p->state = 1;
             p->preempt_count = 1;
@@ -47,28 +42,19 @@ namespace akal {
             p->cpu_context.sp = (unsigned long) p + 1000;
             int pid = cc++;
             p->cpu_context.x21 = p->pid = pid;
-            //machine_ptr->uart0.hex(pid);
-            //machine_ptr->uart0.write("create\n");
             _tasks[pid] = p;
             preempt_enable();
         }
-
         void Scheduler::preempt_disable(void) {
             if(current) {
-              //  machine_ptr->uart0.hex(machine_ptr->scheduler.current->pid);
-            //machine_ptr->uart0.write("preedisa\n");
                 current->preempt_count++;
             }
         }
-
         void Scheduler::preempt_enable(void) {
             if(current) {
-               // machine_ptr->uart0.hex(machine_ptr->scheduler.current->pid);
-            //machine_ptr->uart0.write("preeena\n");
                 current->preempt_count--;
             }
         }
-
         void Scheduler::schedule() {
             if(cc == 0) {
                 return;
@@ -103,16 +89,11 @@ namespace akal {
                     }
                 }
             }
-//            machine_ptr->uart0.hex(next);
-//            machine_ptr->uart0.write("next\n");
-//            machine_ptr->uart0.hex((u64) _tasks[next]->cpu_context.pc);
-//            machine_ptr->uart0.write("nextp\n");
             akal::arch::enableInterrupts();
             switchTo(_tasks[next]);
             preempt_enable();
             akal::arch::disableInterrupts();
         }
-
         void Scheduler::switchTo(Task *next) {
             Task * prev = current;
             current = next;
