@@ -204,13 +204,32 @@ void print(int x, int y, const char *s)
         class RaspberryPi3: public Machine {
         public:
             InterruptController interruptController;
-            Uart1Device uart1;
-            Uart0Device uart0;
-            ARMTimer timer;
-            RPiScreen screen;
-            Console console;
             Scheduler scheduler;
             MemoryManager memory;
+            #ifdef AKAL_APPLICATION_TARGET_REQUIRE_UART
+            Uart1Device uart1;
+            Uart0Device uart0;
+            #endif
+            ARMTimer timer;
+            #ifdef AKAL_APPLICATION_TARGET_REQUIRE_SCREEN
+            RPiScreen screen;
+            #endif
+            #ifdef AKAL_APPLICATION_TARGET_REQUIRE_CONSOLE
+            Console console;
+            #endif
+
+            void init() {
+                #ifdef AKAL_APPLICATION_TARGET_REQUIRE_UART
+                this->uart1.init(*this);
+                this->uart0.init(*this);
+                #endif
+                #ifdef AKAL_APPLICATION_TARGET_REQUIRE_SCREEN
+                this->screen.init(*this);
+                #endif
+                #ifdef AKAL_APPLICATION_TARGET_REQUIRE_CONSOLE
+                this->console.init();
+                #endif
+            }
         };
 
     }

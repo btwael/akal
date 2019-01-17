@@ -44,11 +44,8 @@ extern "C" void akal_sysinit(void) {
     akal::board::setupInterruptVector(); // TODO: arch
     machine.interruptController.init(machine);
     machine.timer.init(machine);
-    machine.uart1.init(machine);
-    machine.uart0.init(machine);
-    machine.screen.init(machine);
-    machine.console.init();
     machine.scheduler.init();
+    machine.init();
     machine.scheduler.addTask(startup, 4, (u64) &machine);
     akal::arch::enableInterrupts();
     //startup(machine);

@@ -17,14 +17,21 @@ def compileAsm(input, output, define_list):
     system(l)
 
 requirement_map = {
-    "uart": "AKAL_APPLICATION_TARGET_REQUIRE_UART"
+    "uart": ["AKAL_APPLICATION_TARGET_REQUIRE_UART", []],
+    "screen": ["AKAL_APPLICATION_TARGET_REQUIRE_SCREEN", []],
+    "console": ["AKAL_APPLICATION_TARGET_REQUIRE_CONSOLE", ["screen"]]
 }
 pp_define = []
+def requireFeature(feature):
+    if feature in requirement_map:
+        desc = requirement_map[feature];
+        pp_define.append(desc[0])
+        for feature in desc[1]:
+            requireFeature(feature)
 yamlstring = open("application/application.yaml", "r").read()
 config = parse_string(yamlstring)
-for requirement in config["require"]:
-    if requirement in requirement_map:
-        pp_define.append(requirement_map[requirement])
+for feature in config["require"]:
+    requireFeature(feature)
 
 if config["target"].startswith("rpi3"):
     pp_define.append("AKAL_APPLICATION_TARGET_RPI3")

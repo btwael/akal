@@ -2,3 +2,4 @@ name: TheDemo
 target: rpi3-64-qemu
 require:
   - uart
+  - console
